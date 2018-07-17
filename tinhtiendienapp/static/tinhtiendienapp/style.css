@@ -1,0 +1,13 @@
+#main_nav {
+    margin-bottom: 1em;
+}
+#img_result_table img {
+    width: 100%;
+    height: auto;
+}
+label.error {
+    color: #a94442;
+}
+input.error {
+    border-color: #a94442;
+}

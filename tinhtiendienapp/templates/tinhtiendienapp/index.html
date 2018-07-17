@@ -1,0 +1,226 @@
+{% extends "base_layout.html" %}
+{% load humanize %}
+{% load static %}
+{% block title %}Tính tiền điện{% endblock %}
+
+
+{% block main_content %}
+    <div class="middle-left">
+        <div class="ui-block">
+            <div class="ui-block-caption">
+                <img alt="" src="{% static 'tinhtiendienapp/images/icon1.png' %}"> Tính tiền điện sinh hoạt
+            </div>
+            <div class="ui-block-content">
+                <form action="{% url 'index' %}" method="get" id="user_form">
+                    {% csrf_token %}
+                    {% for field in form %}
+                        <div class="f-field">
+                            <p>{{ field.label }}</p>
+                            {{ field }}
+                            {% if field.help_text %}
+                                <em>{{ field.help_text }}</em>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                    <div class="f-field f-field-control">
+                        <input type="submit" class="my-btn" value="Tính Tiền Điện"/>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </div>
+    <!--- ket qua theo ngay --->
+    {% if ket_qua_ngay.tieu_thu %}
+        {% include "inc_result.html" with id="day" title="Tiền điện 1 ngày" tien_dien=ket_qua_ngay.thanh_tien bang_tien_dien=ket_qua_ngay.bang_tien_dien tieu_thu=ket_qua_ngay.tieu_thu %}
+    {% endif %}
+    <!--- ket qua theo tuan --->
+    {% if ket_qua_tuan.tieu_thu %}
+        {% include "inc_result.html" with id="day" title="Tiền điện 1 tuần" tien_dien=ket_qua_tuan.thanh_tien bang_tien_dien=ket_qua_tuan.bang_tien_dien tieu_thu=ket_qua_tuan.tieu_thu %}
+    {% endif %}
+    <!--- ket qua theo thang --->
+    {% if ket_qua_thang.tieu_thu %}
+        {% include "inc_result.html" with id="day" title="Tiền điện 1 tháng" tien_dien=ket_qua_thang.thanh_tien bang_tien_dien=ket_qua_thang.bang_tien_dien tieu_thu=ket_qua_thang.tieu_thu %}
+    {% endif %}
+
+    {% if ket_qua_thang.bang_tien_dien %}
+        <div class="block-caption">
+            <img alt="" src="{% static 'tinhtiendienapp/images/icon4.png' %}"> PHÂN BỐ GIÁ ĐIỆN THEO ĐỊNH MỨC
+        </div>
+        <div class="chart-box">
+            <canvas id="myChart" width="100" height="100"></canvas>
+        </div>
+    {% endif %}
+{% endblock %}
+
+{% block right_content %}
+    {% if ket_qua_thang.bang_tien_dien %}
+    <div class="block-caption">
+        <img alt="" src="{% static 'tinhtiendienapp/images/icon3.png' %}"> <span>  Hóa đơn</span> của bạn</div>
+    <div class="result-block">
+        <div class="rb-dots">
+            <div class="dot"></div>
+            <div class="dot"></div>
+            <div class="dot"></div>
+            <div class="dot"></div>
+            <div class="dot"></div>
+            <div class="dot"></div>
+        </div>
+
+            <div class="rb-content">
+                <img src="{% static 'tinhtiendienapp/images/' %}/{{ img_name }}">
+            </div>
+    </div>
+    {% endif %}
+    <div class="block-caption">
+        <img alt="" src="{% static 'tinhtiendienapp/images/icon2.png' %}"> <span> Chia sẻ </span>với bạn bè
+    </div>
+    <div class="box-share">
+        <div class="share-social">
+            <span>Chia sẻ lên:</span>
+            <a href="#" class="facebook"><i class="fa fa-facebook-square">
+        </i></a>
+            <a href="#" class="twitter"><i class="fa fa-twitter-square">
+        </i></a>
+            <a href="#" class="google"><i class="fa fa-google-plus-square">
+        </i></a>
+        </div>
+        <!-- AddToAny BEGIN -->
+        <div class="a2a_kit a2a_kit_size_32 a2a_default_style">
+        <a class="a2a_dd" href="https://www.addtoany.com/share"></a>
+        <a class="a2a_button_facebook"></a>
+        <a class="a2a_button_twitter"></a>
+        <a class="a2a_button_google_plus"></a>
+        </div>
+        <script async src="https://static.addtoany.com/menu/page.js"></script>
+        <!-- AddToAny END -->
+        <div class="share-row">
+            <p>URL Link</p>
+            <div class="sr-wrap">
+                <input type="text" value="http://tinhgiatiendien.com/p=9000&d=10">
+                <span class="copy">
+                Copy</span>
+            </div>
+        </div>
+        <div class="share-row">
+            <p>HTML Code</p>
+            <div class="sr-wrap">
+                <input type="text" value=" <a href='#'>http://tinhgiatiendien.com/p=9000&d=10</a>">
+                <span class="copy">
+                Copy</span>
+            </div>
+        </div>
+        <div class="share-row">
+            <p>BB Code</p>
+            <div class="sr-wrap">
+                <input type="text" value="http://tinhgiatiendien.com/p=9000&d=10">
+                <span class="copy">
+                Copy</span>
+            </div>
+        </div>
+    </div>
+    <div class="box-price">
+        <div class="box-price-caption">
+            <h3>Giá điện của EVN </h3>
+            <p>cập nhật ngày 06/06/2018</p>
+        </div>
+        <div class="box-price-content">
+            <div class="table-price">
+                <table>
+                    <thead>
+                        <tr>
+                            <th width="10%">Bậc</th>
+                            <th width="55%">Định mức</th>
+                            <th width="35%">Giá bán (đồng/kWh)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for dm in bang_gia_dien %}
+                        {% if forloop.last %}
+                            <tr>
+                                <td>{{ dm.level_no }}</td>
+                                <td>Cho kWh từ {{ dm.level_start }} trở lên</td>
+                                <td align="right">{{ dm.level_price|intcomma }}</td>
+                            </tr>
+                        {% else %}
+                             <tr>
+                                <td>{{ dm.level_no }}</td>
+                                <td>Cho kWh từ {{ dm.level_start }} - {{ dm.level_end }}</td>
+                                <td align="right">{{ dm.level_price|intcomma }}</td>
+                            </tr>
+                        {% endif %}
+                    {% endfor %}
+                    </tbody>
+                
+                </table>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block bot_script %}
+    {% if ket_qua_thang.bang_tien_dien %}
+        <script type="text/javascript">
+            var ctx = document.getElementById("myChart").getContext('2d');
+            var myChart = new Chart(ctx, {
+                type: 'pie',
+                data: {
+                    labels: [
+                        {% for kq in ket_qua_thang.bang_tien_dien %}
+                            "Mức {{ kq.0 }}",
+                        {% endfor %}
+                    ],
+                    datasets: [{
+                        label: '# of Votes',
+                        data: [
+                            {% for kq in ket_qua_thang.bang_tien_dien %}
+                                "{{ kq.5 }}",
+                            {% endfor %}
+                        ],
+                        backgroundColor: [
+                            {% for kq in ket_qua_thang.bang_tien_dien %}
+                                {% if kq.0 == 1 %}
+                                    'rgba(63, 189, 106, 0.2)',
+                                {% elif kq.0 == 2 %}
+                                    'rgba(81, 141, 218, 0.2)',
+                                {% elif kq.0 == 3 %}
+                                    'rgba(142, 68, 173, 0.2)',
+                                {% elif kq.0 == 4 %}
+                                    'rgba(52, 73, 94, 0.2)',
+                                {% elif kq.0 == 5 %}
+                                    'rgba(255, 193, 7, 0.2)',
+                                {% elif kq.0 == 6 %}
+                                    'rgba(255, 99, 132, 0.2)',
+                                {% endif %}
+                            {% endfor %}
+                        ],
+                        borderColor: [
+                            {% for kq in ket_qua_thang.bang_tien_dien %}
+                                {% if kq.0 == 1 %}
+                                    'rgba(63, 189, 106, 1)',
+                                {% elif kq.0 == 2 %}
+                                    'rgba(81, 141, 218, 1)',
+                                {% elif kq.0 == 3 %}
+                                    'rgba(142, 68, 173, 1)',
+                                {% elif kq.0 == 4 %}
+                                    'rgba(52, 73, 94, 1)',
+                                {% elif kq.0 == 5 %}
+                                    'rgba(255, 193, 7, 1)',
+                                {% elif kq.0 == 6 %}
+                                    'rgba(255, 99, 132, 1)',
+                                {% endif %}
+                            {% endfor %}
+                        ],
+                        borderWidth: 1,
+                    }],
+                },
+                options: {
+                    legend: {
+                        position: 'bottom',
+                    }
+                }
+            });
+
+        </script>
+    {% endif %}
+{% endblock %}

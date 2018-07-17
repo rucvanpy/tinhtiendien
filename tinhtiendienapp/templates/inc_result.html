@@ -1,0 +1,80 @@
+{% load humanize %}
+<div class="ui-block">
+    <div class="accordion">
+        <div class="acc-caption">
+            <p>{{ title }}: <b>{{ tien_dien|intcomma }} đ</b></p>
+            <span>Số điện tiêu thụ: <b>{{ tieu_thu }} (Kwh)</b></span>
+            <div class="acc-icon">
+                <i class="fa fa-angle-down"></i>
+            </div>
+        </div>
+        <div class="acc-content">
+            <div class="acc-content-desktop">
+                <div class="table-acc">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th class="col1">Bậc</th>
+                                <th class="col2">Định mức</th>
+                                <th class="col3">Số điện tiêu thụ </th>
+                                <th class="col4">Giá bán (đồng/kWh)</th>
+                                <th class="col4">Chi phí</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for kq in bang_tien_dien %}
+                            <tr>
+                                <td>{{ kq.0 }}</td>
+                                <td>
+                                    {% if kq.2 == 1000000000 %}
+                                        Cho kWh từ {{ kq.1 }} trở lên
+                                    {% else %}
+                                        Cho kWh từ {{ kq.1 }} - {{ kq.2 }}
+                                    {% endif %}
+                                </td>
+                                <td>{{ kq.3 }}</td>
+                                <td>{{ kq.4|intcomma}}</td>
+                                <td>{{ kq.5|intcomma }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="acc-content-mobile">
+                <div class="acc-mobile">
+                    {% for kq in bang_tien_dien %}
+                    <div class="acc-m-item">
+                        <div class="mi-row">
+                            <div><span>Bậc</span> </div>
+                            <div><span>{{ kq.0 }}</span> </div>
+                        </div>
+                        <div class="mi-row">
+                            <div><span>Định mức</span> </div>
+                            <div><span>
+                                {% if kq.2 == 1000000000 %}
+                                    Cho kWh từ {{ kq.1 }} trở lên
+                                {% else %}
+                                    Cho kWh từ {{ kq.1 }} - {{ kq.2 }}
+                                {% endif %}
+                            </span> </div>
+                        </div>
+                        <div class="mi-row">
+                            <div><span>Số điện tiêu thụ</span> </div>
+                            <div><span>{{ kq.3 }}</span> </div>
+                        </div>
+                        <div class="mi-row">
+                            <div><span>Giá bán (đồng/kWh)</span> </div>
+                            <div><span>{{ kq.4 }}</span> </div>
+                        </div>
+                        <div class="mi-row">
+                            <div><span>Chi phí(đồng)</span> </div>
+                            <div><span>{{ kq.5 }}</span> </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
