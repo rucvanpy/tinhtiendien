@@ -30,8 +30,8 @@ def tinh_tien(dinh_muc, kwh, gia_dien):
 def generate_image(cong_suat, gia_dien, thoi_gian, ngay, tuan, thang):
     tieu_thu_nam = thang[0] * 12
     tien_dien_nam = thang[1] * 12
-    tpl_img_url = 'static/tinhtiendienapp/images/tinh_tien_dien_tpl.png'
-    img_url =  'static/tinhtiendienapp/images/tinh_tien_dien_{}_{}_{}.png'.format(cong_suat, gia_dien,
+    tpl_img_url = 'tinhtiendienapp/static/tinhtiendienapp/images/tinh_tien_dien_tpl.png'
+    img_url =  'tinhtiendienapp/static/tinhtiendienapp/images/tinh_tien_dien_{}_{}_{}.png'.format(cong_suat, gia_dien,
                                                                                                 thoi_gian)
     try:
         Image.open(img_url)
