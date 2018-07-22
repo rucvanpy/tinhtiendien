@@ -12,7 +12,6 @@
             </div>
             <div class="ui-block-content">
                 <form action="{% url 'index' %}" method="get" id="user_form">
-                    {% csrf_token %}
                     {% for field in form %}
                         <div class="f-field">
                             <p>{{ field.label }}</p>
